@@ -1,9 +1,5 @@
 #include <iostream>
 #include <sstream>
-#include <sys/stat.h>
-#include <cassert>
-#include <stdio.h>
-#include <cstring>
 
 typedef unsigned char byte;
 #define W 720
@@ -18,17 +14,6 @@ void clear_frame() {
     memset(frame, 0, sizeof(frame));
 }
 
-void draw_rect(int x, int y, int w, int h, byte r, byte g, byte b);
-
-//Main Drawing Code.
-//Expand this function to add content to the video.
-
-void draw_frame(double t) {
-    clear_frame();
-    const double pps = 80;
-    draw_rect(0 + t * pps, 0 + t * pps, 20, 10, 0x00, 0xff, 0x00);
-}
-
 void clamp(int * x, int * y) {
     if(*x < 0) *x = 0;
     else if(*x >= W) *x = W - 1;
@@ -37,7 +22,12 @@ void clamp(int * x, int * y) {
     else if(*y >= H) *y = H - 1;
 }
 
+bool outside_frame(int * x, int * y) {
+    return *x < 0 or *x >= W or *y < 0 or *y >= H;
+}
+
 void draw_rect(int x, int y, int w, int h, byte r, byte g, byte b) {
+    if (outside_frame(&x, &y)) return;
     clamp(&x, &y);
     int x0 = x;
     int x1 = x + w;
@@ -54,21 +44,34 @@ void draw_rect(int x, int y, int w, int h, byte r, byte g, byte b) {
     }
 }
 
+//Main Drawing Code.
+//Expand this function to add content to the video.
+
+void draw_frame(double t) {
+    clear_frame();
+    const double pps = 80;
+    draw_rect(0 + t * pps, 0 + t * pps, 20, 10, 0xff, 0xff, 0xff);//origin to south east
+    draw_rect(400 , 200 - t * pps, 20, 10, 0xff, 0x00, 0xff); //origin to north
+    draw_rect(500 , 200 + t * pps, 20, 10, 0xff, 0xff, 0x00); //origin to south
+    draw_rect(250 + t * pps, 150, 20, 10, 0x00, 0xff, 0xff); //origin to east
+    draw_rect(300 - t * pps, 150, 20, 10, 0x00, 0x00, 0xff); //origin to west
+}
+
 int main(int argc, char * argv[]) {
     const char * cmd =
             "ffmpeg              "
-            "-y                  "
-            "-hide_banner        "
-            "-f rawvideo         " // input to be raw video data
-            "-pixel_format rgb24 "
-            "-video_size 720x480 "
-            "-r 60               " // frames per second
-            "-i -                " // read data from the standard input stream
-            "-pix_fmt yuv420p    " // to render with Quicktime
-            "-vcodec mpeg4       "
-            "-an                 " // no audio
-            "-q:v 5              " // quality level; 1 <= q <= 32
-            "output.mp4          ";
+                    "-y                  "
+                    "-hide_banner        "
+                    "-f rawvideo         " // input to be raw video data
+                    "-pixel_format rgb24 "
+                    "-video_size 720x480 "
+                    "-r 60               " // frames per second
+                    "-i -                " // read data from the standard input stream
+                    "-pix_fmt yuv420p    " // to render with Quicktime
+                    "-vcodec mpeg4       "
+                    "-an                 " // no audio
+                    "-q:v 5              " // quality level; 1 <= q <= 32
+                    "output.mp4          ";
 
     FILE * pipe = popen(cmd, "w");
     if (pipe == 0) {
