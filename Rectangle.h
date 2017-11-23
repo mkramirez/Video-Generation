@@ -1,26 +1,18 @@
 #pragma once
 
 #include <iostream>
-#include <sstream>
-#include <sys/stat.h>
-#include <cstdio>
-#include <cstring>
-
-#define W 720
-#define H 480
-
-typedef unsigned char byte;
+#include <vector>
+#include "Frame.h"
+#include "global.h"
 
 class Rectangle {
 public:
-    Rectangle();
-    ~Rectangle();
-    void draw_rect(int x, int y, int w, int h, byte r, byte g, byte b);
-    void clear_frame();
-    void clamp(int * x, int * y);
-    void draw_frame(double t);
-    bool outside_frame(int * x, int * y) const;
+    Rectangle(double h, double w, double x, double y, byte r, byte g, byte b): h(h), w(w), x(x), y(y), r(r), g(g), b(b) {}
+    void draw(Frame &frame);
+    void setSpeed(double dx, double dy);
+    void update(double dt);
 private:
-    FILE *pipe;
-    unsigned char frame[H][W][3];
+    byte r, g, b;
+    double h, w, x, y, dx, dy;
+
 };
