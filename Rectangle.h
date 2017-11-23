@@ -3,7 +3,7 @@
 #include <iostream>
 #include <sstream>
 #include <sys/stat.h>
-#include <stdio.h>
+#include <cstdio>
 #include <cstring>
 
 #define W 720
