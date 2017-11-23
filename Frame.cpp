@@ -1,7 +1,7 @@
-#include <stdio.h>
+#include <cstdio>
 #include <cstring>
 #include "Frame.h"
-#include "global.h"
+
 
 Frame::Frame() {
     pixels = new byte[W * H * 3];

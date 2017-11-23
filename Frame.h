@@ -11,7 +11,6 @@ public:
     void clear();
     bool isOutside(int x, int y) const;
     void write(FILE * file) const;
-    void clamp(int x, int y);
 private:
     unsigned char *pixels;
 };
