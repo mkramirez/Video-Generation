@@ -9,15 +9,15 @@ int main(int argc, char * argv[]) {
             "ffmpeg              "
                     "-y                  "
                     "-hide_banner        "
-                    "-f rawvideo         " // input to be raw video data
+                    "-f rawvideo         "
                     "-pixel_format rgb24 "
                     "-video_size 720x480 "
-                    "-r 60               " // frames per second
-                    "-i -                " // read data from the standard input stream
-                    "-pix_fmt yuv420p    " // to render with Quicktime
+                    "-r 60               "
+                    "-i -                "
+                    "-pix_fmt yuv420p    "
                     "-vcodec mpeg4       "
-                    "-an                 " // no audio
-                    "-q:v 5              " // quality level; 1 <= q <= 32
+                    "-an                 "
+                    "-q:v 5              "
                     "output.mp4          ";
 
 #ifdef _WIN32
@@ -32,9 +32,9 @@ int main(int argc, char * argv[]) {
 
     std::vector<Rectangle>rect;
 
-    Rectangle r1 (45, 45, 150, 50, 0xff, 0x00, 0x00);
+    Rectangle r1 (45, 45, 150, 50, 0xff, 0x00, 0xff);
     r1.setSpeed(5, 4);
-    Rectangle r2(45, 45, 200, 55, 0xff, 0xff, 0x00);
+    Rectangle r2(45, 45, 200, 55, 0xff, 0x00, 0x00);
     r2.setSpeed(2, 7);
     Rectangle r3(45, 45, 5, 150, 0x00, 0x00, 0xff);
     r3.setSpeed(3, 4);
